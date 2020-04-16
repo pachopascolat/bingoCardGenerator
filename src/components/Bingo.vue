@@ -1,5 +1,12 @@
 <template>
     <div class="div-bingo">
+        <div>
+        <label>Series: </label><span>{{series.length}}</span>
+        </div>
+        <div>
+        <label>Cartones: </label><span>{{series.length * 6}}</span>
+        </div>
+
         <button v-on:click="createCartones">Crear</button>
 
         <div v-for="(cartones,key) in series" v-bind:key="key">
@@ -36,23 +43,29 @@
         name: "Bingo",
         data: function(){
             return {
-                cardArray:[],
+                // cardArray:[],
                 tira:[[],[],[],[],[],[],[],[],[]],
                 series:[],
             };
         },
         methods:{
+            hayRepetido(carton){
+                for(let i = 0; i < this.series.length;i++){
+                    let cartones = this.series[i].slice();
+                    for(let j=0; j < cartones.length;j++){
+                        if(carton === cartones[j]){
+                            return true;
+                        }
+                    }
+
+                }
+                return false;
+            },
             createCartones(){
-                let cartones = [];
+                // let cartones = [];
                 this.createTira();
-                let cards = this.createCard();
-                cards = this.desordenarArray(cards);
-                let i= 0;
-                do{
-                    cartones.push([cards[i],cards[i+1],cards[i+2]]);
-                    i += 3;
-                }while(i<18)
-                this.series.push(cartones);
+                let serie = this.createSerie();
+                this.series.push(serie);
 
             },
             createTira(){
@@ -110,25 +123,33 @@
             randomInt: function (min, max) {
                 return Math.floor(Math.random() * (max - min) ) + min;
             },
-            createCard: function(){
-                let card = [];
-                for(let j = 0 ; j < 18 ; j++) {
-                    let row = [null,null,null,null,null,null,null,null,null];
-                    this.sortByLength(this.tira);
-                    for (let i = 0; i < 5; i++) {
-                        let sacado = this.tira[i].splice(this.randomInt(0,this.tira[i].length-1),1)[0];
-                        let col;
-                        if(sacado==90){
-                            col=8;
-                        }else{
-                            col = Math.trunc(sacado/10);
+            createSerie: function(){
+                let serie = [];
+                do{
+                    let carton = [];
+                    do {
+                        let row = [null, null, null, null, null, null, null, null, null];
+                        this.sortByLength(this.tira);
+                        for (let i = 0; i < 5; i++) {
+                            let sacado = this.tira[i].splice(this.randomInt(0, this.tira[i].length - 1), 1)[0];
+                            let col;
+                            if (sacado == 90) {
+                                col = 8;
+                            } else {
+                                col = Math.trunc(sacado / 10);
+                            }
+                            row[col] = sacado;
                         }
-                        row[col] = sacado;
+                        console.log(row);
+                        carton.push(row);
+
+                    }while (carton.length < 3 )
+                    carton = this.desordenarArray(carton);
+                    if(!this.hayRepetido(carton)) {
+                        serie.push(carton);
                     }
-                    console.log(row);
-                    card[j] = row;
-                }
-                return card;
+                }while (serie.length < 6)
+                return serie;
             }
         }
     }

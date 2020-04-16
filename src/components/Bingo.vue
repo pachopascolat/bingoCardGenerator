@@ -41,11 +41,6 @@
                 series:[],
             };
         },
-        created() {
-            this.createTira();
-            // this.createCartones();
-
-        },
         methods:{
             createCartones(){
                 let cartones = [];

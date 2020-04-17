@@ -1,5 +1,12 @@
 <template>
     <div class="div-bingo">
+
+        <button v-on:click="fontSize+=3">
+            aumentar tamaño
+        </button>
+        <button v-on:click="fontSize-=3">
+            disminuir tamaño
+        </button>
         <div>
         <label>Series: </label><span>{{series.length}}</span>
         </div>
@@ -10,23 +17,23 @@
         <button v-on:click="createCartones">Crear</button>
 
         <div v-for="(cartones,key) in series" v-bind:key="key">
-            <h3>Serie {{key+1}} </h3>
+            <h3>Serie {{series.length - key}} </h3>
             <div class="div-cartones">
 
                 <div v-for="(card,key) in cartones" v-bind:key="key">
                     <div class="card">
                         <div class="my-row" >
-                            <div :class="(num===null?'my-null':'')"  class="my-col" v-for="num in card[0]" v-bind:key="num">
+                            <div :class="(num===null?'my-null':'')" v-bind:style="{ height: fontSize+'px' ,fontSize: fontSize/30 + 'em', width: fontSize+'px'  }"   class="my-col" v-for="num in card[0]" v-bind:key="num">
                                 <div>{{num}}</div>
                             </div>
                         </div>
                         <div class="my-row" >
-                            <div :class="(num===null?'my-null':'')"  class="my-col" v-for="num in card[1]" v-bind:key="num">
+                            <div :class="(num===null?'my-null':'')" v-bind:style="{ height: fontSize+'px' ,fontSize: fontSize/30 + 'em', width: fontSize+'px'  }"  class="my-col" v-for="num in card[1]" v-bind:key="num">
                                 <div >{{num}}</div>
                             </div>
                         </div>
                         <div class="my-row" >
-                            <div :class="(num===null?'my-null':'')"  class="my-col" v-for="num in card[2]" v-bind:key="num">
+                            <div :class="(num===null?'my-null':'')" v-bind:style="{ height: fontSize+'px' ,fontSize: fontSize/30 + 'em', width: fontSize+'px'  }" class="my-col" v-for="num in card[2]" v-bind:key="num">
                                 <div >{{num}}</div>
                             </div>
                         </div>
@@ -46,9 +53,14 @@
                 // cardArray:[],
                 tira:[[],[],[],[],[],[],[],[],[]],
                 series:[],
+                fontSize: 35,
             };
         },
         methods:{
+            changeSize(){
+                document.querySelector(".my-col").style.width = this.size;
+                document.querySelector(".my-col").style.height = this.size;
+            },
             hayRepetido(carton){
                 for(let i = 0; i < this.series.length;i++){
                     let cartones = this.series[i].slice();
@@ -65,7 +77,7 @@
                 // let cartones = [];
                 this.createTira();
                 let serie = this.createSerie();
-                this.series.push(serie);
+                this.series.unshift(serie);
 
             },
             createTira(){
@@ -168,10 +180,12 @@
         /*flex: 1;*/
         width: 60px;
         height: 60px;
-        font-size: 2em;
+        /*font-size: 2em;*/
+        /*padding: 1em;*/
         /*padding: 4px;*/
     }
     .my-null{
+
         background-color: lightslategray;
     }
     .card{
